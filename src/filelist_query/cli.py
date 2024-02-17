@@ -24,4 +24,4 @@ def run(db_file: str = None) -> None:
 
 
 if __name__ == "__main__":
-    print(get_app_version())
+    print(f"\n{get_app_version() = }")

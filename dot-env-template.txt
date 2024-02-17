@@ -1,0 +1,9 @@
+# These environment variables may be set in a .env file,
+# or wherever you get your environment variables.
+
+# If no file is specified via the cli, open this file:
+FILELIST_QUERY_DEFAULT_FILE=""
+
+# If no file is specified via the cli, and no default file is set, open the
+# most recent file in this directory:
+FILELIST_QUERY_DIR_LATEST=""

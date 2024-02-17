@@ -4,5 +4,5 @@ __pycache__/
 .ruff_cache/
 .vscode/
 dist/
-
+.env
 *.pyc
