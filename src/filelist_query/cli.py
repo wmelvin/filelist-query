@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from importlib import metadata
 
 import click
@@ -15,6 +13,7 @@ def get_app_version() -> str:
         return metadata.version(DIST_NAME)
     except metadata.PackageNotFoundError:
         return MOD_VERSION
+
 
 @click.command()
 @click.version_option(get_app_version())

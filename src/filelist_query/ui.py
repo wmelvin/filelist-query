@@ -6,7 +6,7 @@ from textual.app import App
 
 
 class UI(App):
-    def __init__(self, db_file:str|Path = None):
+    def __init__(self, db_file: str | Path = None):
         if db_file is None:
             self._db_file = None  # TODO: get_db_file()
         elif isinstance(db_file, str):
