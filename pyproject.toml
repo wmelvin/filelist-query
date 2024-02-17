@@ -24,7 +24,12 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = ["textual"]
+dependencies = [
+  "click",
+  "python-dotenv",
+  "rich",
+  "textual",
+]
 
 # [project.urls]
 # Documentation = "https://github.com/unknown/filelist-query#readme"
@@ -38,6 +43,9 @@ path = "src/filelist_query/__about__.py"
 dependencies = [
   "coverage[toml]>=6.5",
   "pytest",
+  "textual-dev",
+  "pytest-asyncio",
+  "pytest-textual-snapshot",
 ]
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
