@@ -23,5 +23,6 @@ def run(db_file: str = None) -> None:
     ui = UI(db_file)
     ui.run()
 
+
 if __name__ == "__main__":
     print(get_app_version())

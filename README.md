@@ -1,21 +1,10 @@
-# filelist query
+# filelist-query
 
-[![PyPI - Version](https://img.shields.io/pypi/v/filelist-query.svg)](https://pypi.org/project/filelist-query)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/filelist-query.svg)](https://pypi.org/project/filelist-query)
+Textual user interface for querying databases created by filelist-tools.
 
------
+## Reference
 
-**Table of Contents**
-
-- [Installation](#installation)
-- [License](#license)
-
-## Installation
-
-```console
-pip install filelist-query
-```
-
-## License
-
-`filelist-query` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
+- [wmelvin/filelist-tools](https://github.com/wmelvin/filelist-tools)
+- [Textual](https://textual.textualize.io/)
+- [Click](https://palletsprojects.com/p/click/)
+- [Hatch](https://hatch.pypa.io/latest/)
