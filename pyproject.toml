@@ -5,11 +5,11 @@ build-backend = "hatchling.build"
 [project]
 name = "filelist-query"
 dynamic = ["version"]
-description = ''
+description = 'Textual user interface for querying databases created by filelist-tools.'
 readme = "README.md"
 requires-python = ">=3.8"
 license = "MIT"
-keywords = []
+keywords = ["filelist", "filelist-tools", "filelist-query", "tui", "sqlite", "cli", "textual"]
 authors = [
   { name = "Bill Melvin", email = "bill@billmelvin.com" },
 ]
@@ -24,12 +24,12 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = []
+dependencies = ["textual"]
 
-[project.urls]
-Documentation = "https://github.com/unknown/filelist-query#readme"
-Issues = "https://github.com/unknown/filelist-query/issues"
-Source = "https://github.com/unknown/filelist-query"
+# [project.urls]
+# Documentation = "https://github.com/unknown/filelist-query#readme"
+# Issues = "https://github.com/unknown/filelist-query/issues"
+# Source = "https://github.com/unknown/filelist-query"
 
 [tool.hatch.version]
 path = "src/filelist_query/__about__.py"
