@@ -1,0 +1,32 @@
+
+Screen {
+    align: center top;
+}
+
+ScrollableContainer {
+    content-align: center middle;
+}
+
+Static {
+    content-align: center middle;
+}
+
+.tab-content {
+    background: $success;
+}
+
+OptionList {
+    width: 25;
+    height: auto;
+    margin: 2 2;
+}
+
+.buttonbar {
+    align: center middle;
+    width: 15;
+}
+
+.active {
+    background: $success;
+    color: $text;
+}
