@@ -5,10 +5,13 @@ from textual.containers import Horizontal, VerticalScroll
 from textual.widgets import Button, OptionList, TabPane
 from textual.widgets.option_list import Option
 
-from filelist_query.data import get_db_table_columns
+from filelist_query.data import DbColumnInfo, get_db_table_columns
 
 
 class FieldsTab(TabPane):
+    def __init__(self, title, id) -> None:  # noqa: A002
+        super().__init__(title, id=id)
+        self._data_columns: list[DbColumnInfo] = None
 
     def compose(self) -> ComposeResult:
         yield Horizontal(
@@ -28,13 +31,16 @@ class FieldsTab(TabPane):
             ),
         )
 
+    def _load_column_info(self) -> None:
+        self._data_columns = get_db_table_columns(self.app.db_file, "view_filelist")
+
     def on_mount(self) -> None:
+        self._load_column_info()
         field_list = self.query_one("#field_list")
-        fields = get_db_table_columns(self.app.db_file, "view_filelist")
-        for field in fields:
-            field_list.add_option(Option(field))
+        for field in self._data_columns:
+            field_list.add_option(Option(field.name))
             #  Add file_name by default.
-            if field == "file_name":
+            if field.name == "file_name":
                 self.select_field("file_name")
 
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
@@ -106,3 +112,9 @@ class FieldsTab(TabPane):
             selected_list.get_option_at_index(ix).prompt
             for ix in range(selected_list.option_count)
         ]
+
+    def get_column_type(self, column_name: str) -> str:
+        for col in self._data_columns:
+            if col.name == column_name:
+                return col.type
+        return None

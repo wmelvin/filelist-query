@@ -1,8 +1,17 @@
+from __future__ import annotations
+
 import os
 import sqlite3
+from dataclasses import dataclass
 from pathlib import Path
 
 import dotenv
+
+
+@dataclass
+class DbColumnInfo:
+    name: str
+    type: str
 
 
 def get_db_file() -> Path:
@@ -26,15 +35,16 @@ def get_db_file() -> Path:
     return None
 
 
-def list_columns(con: sqlite3.Connection, table: str):
+def list_columns(con: sqlite3.Connection, table: str) -> list[DbColumnInfo]:
     cur = con.cursor()
+    # https://www.sqlite.org/pragma.html#pragma_table_info
     stmt = f"PRAGMA table_info({table});"
     rows = cur.execute(stmt).fetchall()
     cur.close()
-    return [row[1] for row in rows]
+    return [DbColumnInfo(row[1], row[2]) for row in rows]
 
 
-def get_db_table_columns(db_path: Path, table: str):
+def get_db_table_columns(db_path: Path, table: str) -> list[DbColumnInfo]:
     if db_path is None:
         return ["(no database file specified)"]
     con = sqlite3.connect(str(db_path))

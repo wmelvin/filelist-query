@@ -15,11 +15,6 @@ class FileTab(TabPane):
         yield Static("File", classes="tab-content")
 
 
-# class CriteriaTab(TabPane):
-#     def compose(self) -> ComposeResult:
-#         yield Static("Criteria", classes="tab-content")
-
-
 class QueryTab(TabPane):
     def compose(self) -> ComposeResult:
         yield Static("Query", classes="tab-content")
