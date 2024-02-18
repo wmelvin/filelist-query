@@ -6,15 +6,12 @@ from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, Label, Static, TabbedContent, TabPane
 
 from filelist_query.data import get_db_file
+from filelist_query.tab_fields import FieldsTab
 
 
 class FileTab(TabPane):
     def compose(self) -> ComposeResult:
         yield Static("File", classes="tab-content")
-
-class FieldsTab(TabPane):
-    def compose(self) -> ComposeResult:
-        yield Static("Fields", classes="tab-content")
 
 
 class CriteriaTab(TabPane):
@@ -57,6 +54,17 @@ class UI(App):
             yield CriteriaTab("Criteria", id="criteria")
             yield QueryTab("Query", id="query")
             yield ResultsTab("Results", id="results")
+
+    def on_tabbed_content_tab_activated(
+        self, event: TabbedContent.TabActivated
+    ) -> None:
+        label = event.tab.label.plain
+        self.title = f"Tab: {label}"
+        if label == "Results":
+            content: Label = self.query_one("#results-content")
+            fields_tab = self.query_one("#fields")
+            selected_fields = fields_tab.get_selected_fields()
+            content.renderable = "\n".join(selected_fields)
 
     def action_toggle_dark(self) -> None:
         self.dark = not self.dark

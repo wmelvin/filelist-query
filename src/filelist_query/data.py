@@ -1,4 +1,5 @@
 import os
+import sqlite3
 from pathlib import Path
 
 import dotenv
@@ -23,3 +24,20 @@ def get_db_file() -> Path:
             raise FileNotFoundError(f"No sqlite files in {dir_name}")
         raise FileNotFoundError(f"Directory not found: {dir_name}")
     return None
+
+
+def list_columns(con: sqlite3.Connection, table: str):
+    cur = con.cursor()
+    stmt = f"PRAGMA table_info({table});"
+    rows = cur.execute(stmt).fetchall()
+    cur.close()
+    return [row[1] for row in rows]
+
+
+def get_db_table_columns(db_path: Path, table: str):
+    if db_path is None:
+        return ["(no database file specified)"]
+    con = sqlite3.connect(str(db_path))
+    columns = list_columns(con, table)
+    con.close()
+    return columns

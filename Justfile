@@ -17,3 +17,6 @@
 # Lint with hatch
 @lint:
   hatch fmt --linter
+
+@ui:
+  hatch run python3 src/filelist_query/ui.py

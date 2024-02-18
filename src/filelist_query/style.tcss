@@ -16,14 +16,18 @@ Static {
 }
 
 OptionList {
-    width: 25;
+    width: 20;
     height: auto;
     margin: 2 2;
 }
 
+Button {
+    width: 10;
+}
+
 .buttonbar {
     align: center middle;
-    width: 15;
+    width: 14;
 }
 
 .active {
