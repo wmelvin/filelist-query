@@ -2,6 +2,8 @@
 
 Textual user interface for querying databases created by filelist-tools.
 
+**Development work in progress - not usable as is**
+
 ## Reference
 
 - [wmelvin/filelist-tools](https://github.com/wmelvin/filelist-tools)
