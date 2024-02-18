@@ -6,7 +6,7 @@ from textual.widgets import OptionList
 async def test_field_list():
     app = UI()
     async with app.run_test() as pilot:
-        ft = pilot.app.query_one("#fields")
+        ft = pilot.app.query_one("#fields-tab")
         fl = ft.query_one("#field_list")
         assert fl
         assert fl.option_count > 0

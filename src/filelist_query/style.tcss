@@ -3,10 +3,6 @@ Screen {
     align: center top;
 }
 
-ScrollableContainer {
-    content-align: center middle;
-}
-
 Static {
     content-align: center middle;
 }
@@ -15,13 +11,15 @@ Static {
     background: $success;
 }
 
-OptionList {
+/* FieldsTab */
+
+FieldsTab OptionList {
     width: 20;
     height: auto;
     margin: 2 2;
 }
 
-Button {
+FieldsTab Button {
     width: 10;
 }
 
@@ -33,4 +31,47 @@ Button {
 .active {
     background: $success;
     color: $text;
+}
+
+/* CriteriaTab */
+
+CriteriaTab ScrollableContainer {
+    margin: 0;
+    width: 100%;
+}
+
+Predicate {
+    layout: horizontal;
+    content-align: left middle;
+}
+
+Predicate Select {
+    margin: 1;
+}
+
+Predicate #select_pred {
+    width: 10;
+}
+
+Predicate #select_field {
+    width: 20;
+}
+
+Predicate #select_condition {
+    width: 30;
+}
+
+Predicate Input {
+    margin: 1;
+    width: 40;
+}
+
+#select_pred {
+    visibility: hidden;
+}
+
+.added #select_pred {
+    width: 16;
+    margin: 1;
+    visibility: visible;
 }

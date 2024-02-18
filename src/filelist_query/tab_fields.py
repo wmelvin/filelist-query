@@ -9,7 +9,6 @@ from filelist_query.data import get_db_table_columns
 
 
 class FieldsTab(TabPane):
-    CSS_PATH = "style.tcss"
 
     def compose(self) -> ComposeResult:
         yield Horizontal(

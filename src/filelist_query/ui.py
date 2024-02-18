@@ -6,6 +6,7 @@ from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, Label, Static, TabbedContent, TabPane
 
 from filelist_query.data import get_db_file
+from filelist_query.tab_criteria import CriteriaTab
 from filelist_query.tab_fields import FieldsTab
 
 
@@ -14,9 +15,9 @@ class FileTab(TabPane):
         yield Static("File", classes="tab-content")
 
 
-class CriteriaTab(TabPane):
-    def compose(self) -> ComposeResult:
-        yield Static("Criteria", classes="tab-content")
+# class CriteriaTab(TabPane):
+#     def compose(self) -> ComposeResult:
+#         yield Static("Criteria", classes="tab-content")
 
 
 class QueryTab(TabPane):
@@ -48,12 +49,12 @@ class UI(App):
     def compose(self) -> ComposeResult:
         yield Header()
         yield Footer()
-        with TabbedContent(initial="fields"):
-            yield FileTab("File", id="file")
-            yield FieldsTab("Fields", id="fields")
-            yield CriteriaTab("Criteria", id="criteria")
-            yield QueryTab("Query", id="query")
-            yield ResultsTab("Results", id="results")
+        with TabbedContent(initial="fields-tab"):
+            yield FileTab("File", id="file-tab")
+            yield FieldsTab("Fields", id="fields-tab")
+            yield CriteriaTab("Criteria", id="criteria-tab")
+            yield QueryTab("Query", id="query-tab")
+            yield ResultsTab("Results", id="results-tab")
 
     def on_tabbed_content_tab_activated(
         self, event: TabbedContent.TabActivated
@@ -62,9 +63,12 @@ class UI(App):
         self.title = f"Tab: {label}"
         if label == "Results":
             content: Label = self.query_one("#results-content")
-            fields_tab = self.query_one("#fields")
+            fields_tab = self.query_one("#fields-tab")
             selected_fields = fields_tab.get_selected_fields()
             content.renderable = "\n".join(selected_fields)
+        elif label == "Criteria":
+            criteria_tab = self.query_one("#criteria-tab")
+            criteria_tab.update_fields()
 
     def action_toggle_dark(self) -> None:
         self.dark = not self.dark
