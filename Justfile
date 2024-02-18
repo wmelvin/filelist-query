@@ -18,5 +18,10 @@
 @lint:
   hatch fmt --linter
 
+# Run pytest
+@test:
+  hatch run test
+
+# Run ui.py
 @ui:
   hatch run python3 src/filelist_query/ui.py
