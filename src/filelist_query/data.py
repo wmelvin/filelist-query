@@ -82,23 +82,18 @@ def populate_data_table(db_file: Path, data_table: DataTable, stmt: str) -> None
     params: stmt: str
     return: None
     """
-
     mtime_before = db_file.stat().st_mtime
     con = sqlite3.connect(str(db_file))
     cur = con.cursor()
-
-    run_sql(cur, stmt)
-
-    fields = [x[0] for x in cur.description]
-
-    data_table.add_columns(*fields)
-
-    for row in cur.fetchmany(RESULT_ROW_LIMIT):
-        data_table.add_row(*row)
-
-    cur.close()
-    con.rollback()
-    con.close()
-
-    # The SQLite database file should not be modified.
-    assert db_file.stat().st_mtime == mtime_before  # noqa: S101
+    try:
+        run_sql(cur, stmt)
+        fields = [x[0] for x in cur.description]
+        data_table.add_columns(*fields)
+        for row in cur.fetchmany(RESULT_ROW_LIMIT):
+            data_table.add_row(*row)
+    finally:
+        cur.close()
+        con.rollback()
+        con.close()
+        # The SQLite database file should not be modified.
+        assert db_file.stat().st_mtime == mtime_before  # noqa: S101
