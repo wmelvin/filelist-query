@@ -3,26 +3,18 @@ from __future__ import annotations
 from pathlib import Path
 
 from textual.app import App, ComposeResult
-from textual.widgets import Footer, Header, Label, Static, TabbedContent, TabPane
+from textual.widgets import Footer, Header, Static, TabbedContent, TabPane
 
 from filelist_query.data import get_db_file
 from filelist_query.tab_criteria import CriteriaTab
 from filelist_query.tab_fields import FieldsTab
+from filelist_query.tab_query import QueryTab
+from filelist_query.tab_results import ResultsTab
 
 
 class FileTab(TabPane):
     def compose(self) -> ComposeResult:
         yield Static("File", classes="tab-content")
-
-
-class QueryTab(TabPane):
-    def compose(self) -> ComposeResult:
-        yield Static("Query", classes="tab-content")
-
-
-class ResultsTab(TabPane):
-    def compose(self) -> ComposeResult:
-        yield Label("Results", classes="tab-content", id="results-content")
 
 
 class UI(App):
@@ -57,10 +49,10 @@ class UI(App):
         label = event.tab.label.plain
         self.title = f"Tab: {label}"
         if label == "Results":
-            content: Label = self.query_one("#results-content")
+            results_table = self.query_one("#results-table")
             fields_tab = self.query_one("#fields-tab")
             selected_fields = fields_tab.get_selected_fields()
-            content.renderable = "\n".join(selected_fields)
+            results_table.add_columns(*selected_fields)
         elif label == "Criteria":
             criteria_tab = self.query_one("#criteria-tab")
             criteria_tab.update_fields()
