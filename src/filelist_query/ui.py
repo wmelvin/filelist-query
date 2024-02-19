@@ -5,7 +5,7 @@ from pathlib import Path
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, Static, TabbedContent, TabPane
 
-from filelist_query.data import get_db_file
+from filelist_query.data import get_db_file, populate_data_table
 from filelist_query.tab_criteria import CriteriaTab
 from filelist_query.tab_fields import FieldsTab
 from filelist_query.tab_query import QueryTab
@@ -59,13 +59,12 @@ class UI(App):
         )
 
     def update_results(self):
-        fields_tab = self.query_one("#fields-tab")
-        # criteria_tab = self.query_one("#criteria-tab")
+        query_tab = self.query_one("#query-tab")
+        query_text = query_tab.query_one("#query-text")
+        text = query_text.text
         results_table = self.query_one("#results-table")
-        selected_fields = fields_tab.get_selected_fields()
-        # predicates = criteria_tab.get_predicates()
         results_table.clear(columns=True)
-        results_table.add_columns(*selected_fields)
+        populate_data_table(self.db_file, results_table, text)
 
     def on_tabbed_content_tab_activated(
         self, event: TabbedContent.TabActivated
