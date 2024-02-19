@@ -43,19 +43,41 @@ class UI(App):
             yield QueryTab("Query", id="query-tab")
             yield ResultsTab("Results", id="results-tab")
 
+    def update_criteria(self):
+        criteria_tab = self.query_one("#criteria-tab")
+        criteria_tab.update_fields()
+
+    def update_query(self):
+        fields_tab = self.query_one("#fields-tab")
+        selected_fields = fields_tab.get_selected_fields()
+        criteria_tab = self.query_one("#criteria-tab")
+        predicates = criteria_tab.get_predicates_str()
+        query_text = self.query_one("#query-text")
+        query_text.text = (
+            f"SELECT {', '.join(selected_fields)}\nFROM view_filelist\n"
+            f"WHERE {predicates}"
+        )
+
+    def update_results(self):
+        fields_tab = self.query_one("#fields-tab")
+        # criteria_tab = self.query_one("#criteria-tab")
+        results_table = self.query_one("#results-table")
+        selected_fields = fields_tab.get_selected_fields()
+        # predicates = criteria_tab.get_predicates()
+        results_table.clear(columns=True)
+        results_table.add_columns(*selected_fields)
+
     def on_tabbed_content_tab_activated(
         self, event: TabbedContent.TabActivated
     ) -> None:
         label = event.tab.label.plain
         self.title = f"Tab: {label}"
         if label == "Results":
-            results_table = self.query_one("#results-table")
-            fields_tab = self.query_one("#fields-tab")
-            selected_fields = fields_tab.get_selected_fields()
-            results_table.add_columns(*selected_fields)
+            self.update_results()
+        elif label == "Query":
+            self.update_query()
         elif label == "Criteria":
-            criteria_tab = self.query_one("#criteria-tab")
-            criteria_tab.update_fields()
+            self.update_criteria()
 
     def action_toggle_dark(self) -> None:
         self.dark = not self.dark

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 from textual import on
 from textual.app import ComposeResult
 from textual.containers import ScrollableContainer
@@ -12,14 +14,18 @@ select_pred_options = [
     "or",
 ]
 
+@dataclass
+class PredicateAttrs:
+    pred_type: str = ""
+    field: str = ""
+    condition: int = 0
+    criteria: str = ""
+
 
 class Predicate(Static):
     def __init__(self) -> None:
         super().__init__()
-        self.pred_type = ""
-        self.field = ""
-        self.condition = 0
-        self.criteria = ""
+        self.pred_attrs = PredicateAttrs()
 
     def compose(self) -> ComposeResult:
         yield Select(((p, p) for p in select_pred_options), id="select_pred")
@@ -56,17 +62,17 @@ class Predicate(Static):
             sel: Select = self.query_one("#select_condition")
             sel.set_options(cond_opts)
 
-            self.field = event.value
-            self.condition = 0
+            self.pred_attrs.field = event.value
+            self.pred_attrs.condition = 0
         elif event.select.id == "select_condition":
-            self.condition = event.value
+            self.pred_attrs.condition = event.value
         elif event.select.id == "select_pred":
-            self.pred_type = event.value
+            self.pred_attrs.pred_type = event.value
         self.app.query_one(CriteriaTab).update_title()
 
     @on(Input.Changed)
     def set_query(self, event: Input.Changed) -> None:
-        self.criteria = event.value
+        self.pred_attrs.criteria = event.value
         self.app.query_one(CriteriaTab).update_title()
 
 
@@ -84,14 +90,7 @@ class CriteriaTab(TabPane):
             pred.update_fields()
 
     def update_title(self) -> None:
-        text = ""
-        for pred in self.query(Predicate):
-            if pred.field and pred.condition and pred.criteria:
-                if text:
-                    text += f" {pred.pred_type} "
-                text += (
-                    f"{pred.field}{cond_sql_frag(pred.condition).format(pred.criteria)}"
-                )
+        text = self.get_predicates_str()
         if not text:
             text = "Select"
         self.app.title = text
@@ -101,3 +100,30 @@ class CriteriaTab(TabPane):
         self.query_one("#predicates").mount(new_pred)
         new_pred.add_class("added")
         new_pred.scroll_visible()
+
+    def get_predicates(self):
+        predicates = []
+        for pred in self.query(Predicate):
+            pa = pred.pred_attrs
+            if pa.field and pa.condition and pa.criteria:
+                predicates.append(  # noqa: PERF401
+                    (
+                        pa.pred_type,
+                        pa.field,
+                        pa.condition,
+                        pa.criteria,
+                    )
+                )
+        return predicates
+
+    def get_predicates_str(self):
+        text = ""
+        for pred in self.query(Predicate):
+            pa = pred.pred_attrs
+            if pa.field and pa.condition and pa.criteria:
+                if text:
+                    text += f" {pa.pred_type} "
+                text += (
+                    f"{pa.field}{cond_sql_frag(pa.condition).format(pa.criteria)}"
+                )
+        return text
