@@ -5,7 +5,7 @@ from textual.app import ComposeResult
 from textual.containers import ScrollableContainer
 from textual.widgets import Input, Select, Static, TabPane
 
-from filelist_query.cond_opts import cond_sql_frag, select_condition_options
+from filelist_query.cond_opts import cond_sql_frag, get_cond_select_list
 
 select_pred_options = [
     "and",
@@ -46,20 +46,16 @@ class Predicate(Static):
         if event.value == Select.BLANK:
             return
         if event.select.id == "select_field":
-            sel = self.query_one("#select_condition")
+            fields_tab = self.app.query_one("#fields-tab")
 
-            # TODO: Implement condtion options for numeric and date fields
-            # in addition to strings. Provide a way to override for specific
-            # fields where not all conditions would apply.
-            # For now, default to the options for file_name so the app
-            # doesn't break.
-            #
-            # cond_opts = select_condition_options[event.value]
-            cond_opts = select_condition_options.get(event.value)
-            if not cond_opts:
-                cond_opts = select_condition_options.get("file_name")
+            # Field name is in event.value.
+            column_type = fields_tab.get_column_type(event.value)
 
+            cond_opts = get_cond_select_list(column_type)
+
+            sel: Select = self.query_one("#select_condition")
             sel.set_options(cond_opts)
+
             self.field = event.value
             self.condition = 0
         elif event.select.id == "select_condition":
@@ -94,7 +90,7 @@ class CriteriaTab(TabPane):
                 if text:
                     text += f" {pred.pred_type} "
                 text += (
-                    f"{pred.field}{cond_sql_frag[pred.condition].format(pred.criteria)}"
+                    f"{pred.field}{cond_sql_frag(pred.condition).format(pred.criteria)}"
                 )
         if not text:
             text = "Select"

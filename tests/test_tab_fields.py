@@ -1,6 +1,7 @@
 import pytest
-from filelist_query.ui import UI
 from textual.widgets import OptionList
+
+from filelist_query.ui import UI
 
 
 async def test_field_list():

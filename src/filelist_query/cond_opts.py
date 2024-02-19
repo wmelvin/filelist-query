@@ -1,65 +1,41 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 
-# Define an enum for condition options.
-class ConditionOptions:
-    CONTAINS = 1
-    NOT_CONTAINS = 2
-    STARTS_WITH = 3
-    NOT_STARTS_WITH = 4
-    ENDS_WITH = 5
-    NOT_ENDS_WITH = 6
-    EQUALS = 7
-    NOT_EQUALS = 8
+COND_TYPE_STR = 0
+COND_TYPE_NUM = 1
 
+@dataclass
+class ConditionItem:
+    type: int
+    display_name: str
+    sql_fragment: str
 
-# Define a dictionary that maps condition options to SQL fragment strings.
-cond_sql_frag = {
-    ConditionOptions.CONTAINS: " like '%{}%'",
-    ConditionOptions.NOT_CONTAINS: " not like '%{}%'",
-    ConditionOptions.STARTS_WITH: " like '{}%'",
-    ConditionOptions.NOT_STARTS_WITH: " not like '{}%'",
-    ConditionOptions.ENDS_WITH: " like '%{}'",
-    ConditionOptions.NOT_ENDS_WITH: " not like '%{}'",
-    ConditionOptions.EQUALS: " = '{}'",
-    ConditionOptions.NOT_EQUALS: " != '{}'",
+conditions_dict = {
+    1 : ConditionItem(COND_TYPE_STR, "contains", " like '%{}%'"),
+    2 : ConditionItem(COND_TYPE_STR, "does not contain", " not like '%{}%'"),
+    3 : ConditionItem(COND_TYPE_STR, "starts with", " like '{}%'"),
+    4 : ConditionItem(COND_TYPE_STR, "does not start with", " not like '{}%'"),
+    5 : ConditionItem(COND_TYPE_STR, "ends with", " like '%{}'"),
+    6 : ConditionItem(COND_TYPE_STR, "does not end with", " not like '%{}'"),
+    7 : ConditionItem(COND_TYPE_STR, "equals", " = '{}'"),
+    8 : ConditionItem(COND_TYPE_STR, "does not equal", " != '{}'"),
+    9 : ConditionItem(COND_TYPE_NUM, "greater than", " > {}"),
+    10 : ConditionItem(COND_TYPE_NUM, "less than", " < {}"),
+    11 : ConditionItem(COND_TYPE_NUM, "equals", " = {}"),
+    12 : ConditionItem(COND_TYPE_NUM, "does not equal", " != {}"),
+    13 : ConditionItem(COND_TYPE_NUM, "greater than or equal", " >= {}"),
+    14 : ConditionItem(COND_TYPE_NUM, "less than or equal", " <= {}"),
 }
 
-cond_name = {
-    ConditionOptions.CONTAINS: "contains",
-    ConditionOptions.NOT_CONTAINS: "does not contain",
-    ConditionOptions.STARTS_WITH: "starts with",
-    ConditionOptions.NOT_STARTS_WITH: "does not start with",
-    ConditionOptions.ENDS_WITH: "ends with",
-    ConditionOptions.NOT_ENDS_WITH: "does not end with",
-    ConditionOptions.EQUALS: "equals",
-    ConditionOptions.NOT_EQUALS: "does not equal",
-}
+def get_cond_select_list(db_col_type: str) -> list[tuple[str, int]]:
+    cond_type = COND_TYPE_STR if db_col_type == "TEXT" else COND_TYPE_NUM
+    return [
+        (v.display_name, k)
+        for k, v in conditions_dict.items()
+        if v.type == cond_type
+    ]
 
 
-def get_cond_opt(cond: ConditionOptions) -> list[tuple[str, int]]:
-    return (cond_name[cond], cond)
-
-# TODO: This is too specific. Defaults based on field type are needed.
-select_condition_options = {
-    "file_name": [
-        get_cond_opt(ConditionOptions.CONTAINS),
-        get_cond_opt(ConditionOptions.NOT_CONTAINS),
-        get_cond_opt(ConditionOptions.STARTS_WITH),
-        get_cond_opt(ConditionOptions.NOT_STARTS_WITH),
-        get_cond_opt(ConditionOptions.ENDS_WITH),
-        get_cond_opt(ConditionOptions.NOT_ENDS_WITH),
-        get_cond_opt(ConditionOptions.EQUALS),
-        get_cond_opt(ConditionOptions.NOT_EQUALS),
-    ],
-    "dir_name": [
-        get_cond_opt(ConditionOptions.CONTAINS),
-        get_cond_opt(ConditionOptions.NOT_CONTAINS),
-        get_cond_opt(ConditionOptions.STARTS_WITH),
-        get_cond_opt(ConditionOptions.NOT_STARTS_WITH),
-        get_cond_opt(ConditionOptions.ENDS_WITH),
-        get_cond_opt(ConditionOptions.NOT_ENDS_WITH),
-        # Because the dir_name field is a full directory path, the equals
-        # and not equals conditions are not useful.
-    ],
-}
+def cond_sql_frag(cond_key:int) -> str:
+    return conditions_dict[cond_key].sql_fragment
