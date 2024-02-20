@@ -97,3 +97,15 @@ def populate_data_table(db_file: Path, data_table: DataTable, stmt: str) -> None
         con.close()
         # The SQLite database file should not be modified.
         assert db_file.stat().st_mtime == mtime_before  # noqa: S101
+
+
+def exclude_dirs_clause() -> str:
+    """Return a string that can be used in a WHERE clause to exclude certain
+    directories from the query results.
+
+    Excludes:
+    * Work-in-progress backup directories (_0_bak).
+    * Syncthing backup directories (.stversions).
+    """
+    exclude = ["dir_name not like '_0_bak'", "dir_name not like '.stversions'"]
+    return "".join([f" and ({x})" for x in exclude])

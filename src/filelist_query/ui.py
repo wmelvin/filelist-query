@@ -3,9 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 
 from textual.app import App, ComposeResult
+from textual.binding import Binding
 from textual.widgets import Footer, Header, Static, TabbedContent, TabPane
 
-from filelist_query.data import get_db_file, populate_data_table
+from filelist_query.data import exclude_dirs_clause, get_db_file, populate_data_table
 from filelist_query.tab_criteria import CriteriaTab
 from filelist_query.tab_fields import FieldsTab
 from filelist_query.tab_query import QueryTab
@@ -19,7 +20,7 @@ class FileTab(TabPane):
 
 class UI(App):
     BINDINGS = [
-        ("x", "exit_app", "eXit"),
+        Binding("ctrl+x", "exit_app", "eXit", priority=True),
         ("d", "toggle_dark", "Toggle dark mode"),
     ]
     CSS_PATH = "style.tcss"
@@ -55,7 +56,7 @@ class UI(App):
         query_text = self.query_one("#query-text")
         query_text.text = (
             f"SELECT {', '.join(selected_fields)}\nFROM view_filelist\n"
-            f"WHERE {predicates}"
+            f"WHERE {predicates}\n{exclude_dirs_clause()}"
         )
 
     def update_results(self):
