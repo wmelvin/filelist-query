@@ -29,6 +29,7 @@ dependencies = [
   "python-dotenv",
   "rich",
   "textual",
+  "platformdirs",
 ]
 
 # [project.urls]

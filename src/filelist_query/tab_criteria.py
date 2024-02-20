@@ -1,26 +1,17 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-
 from textual import on
 from textual.app import ComposeResult
 from textual.containers import ScrollableContainer
 from textual.widgets import Input, Select, Static, TabPane
 
+from filelist_query.app_data import PredicateAttrs
 from filelist_query.cond_opts import cond_sql_frag, get_cond_select_list
 
 select_pred_options = [
     "and",
     "or",
 ]
-
-
-@dataclass
-class PredicateAttrs:
-    pred_type: str = ""
-    field: str = ""
-    condition: int = 0
-    criteria: str = ""
 
 
 class Predicate(Static):

@@ -11,3 +11,4 @@ Textual user interface for querying databases created by filelist-tools.
 - [Just](https://github.com/casey/just)
 - [Click](https://palletsprojects.com/p/click/)
 - [Hatch](https://hatch.pypa.io/latest/)
+- [platformdirs](https://github.com/platformdirs/platformdirs)
