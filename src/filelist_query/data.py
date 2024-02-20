@@ -67,7 +67,7 @@ def get_db_table_columns(db_path: Path, table: str) -> list[DbColumnInfo]:
     return columns
 
 
-def populate_data_table(db_file: Path, data_table: DataTable, stmt: str) -> None:
+def populate_data_table(db_file: Path, data_table: DataTable, stmt: str) -> str:
     """Populate a DataTable with the results of a SQL statement.
     The DataTable should be empty before calling this function.
 
@@ -81,8 +81,9 @@ def populate_data_table(db_file: Path, data_table: DataTable, stmt: str) -> None
     params: db_file: pathlib.Path
     params: data_table: textual.widgets.DataTable
     params: stmt: str
-    return: None
+    return: str
     """
+    result = ""
     mtime_before = db_file.stat().st_mtime
     con = sqlite3.connect(str(db_file))
     cur = con.cursor()
@@ -92,12 +93,15 @@ def populate_data_table(db_file: Path, data_table: DataTable, stmt: str) -> None
         data_table.add_columns(*fields)
         for row in cur.fetchmany(RESULT_ROW_LIMIT):
             data_table.add_row(*row)
+    except sqlite3.OperationalError as e:
+        result = f"ERROR in SQL: {e}"
     finally:
         cur.close()
         con.rollback()
         con.close()
         # The SQLite database file should not be modified.
         assert db_file.stat().st_mtime == mtime_before  # noqa: S101
+    return result
 
 
 def exclude_dirs_clause() -> str:

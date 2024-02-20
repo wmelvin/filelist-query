@@ -8,6 +8,7 @@ from platformdirs import user_data_path
 
 APP_NAME = "filelist_query"
 
+
 @dataclass
 class PredicateAttrs:
     pred_type: str = ""
@@ -31,7 +32,7 @@ class AppData:
         self.current_query: QueryAttrs | None = None
 
     @classmethod
-    def app_data_path(self) -> Path|None:
+    def app_data_path(self) -> Path | None:
         p = user_data_path(APP_NAME, appauthor=False)
         if p.exists():
             return p

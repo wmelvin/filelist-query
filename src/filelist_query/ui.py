@@ -65,7 +65,10 @@ class UI(App):
         text = query_text.text
         results_table = self.query_one("#results-table")
         results_table.clear(columns=True)
-        populate_data_table(self.db_file, results_table, text)
+        msg = populate_data_table(self.db_file, results_table, text)
+        if msg:
+            self.title = msg
+            # TODO: Something other than showing an error in the title.
 
     def on_tabbed_content_tab_activated(
         self, event: TabbedContent.TabActivated
