@@ -10,9 +10,9 @@
   rm dist/*
   rmdir dist
 
-# Apply formatting with hatch
+# Apply formatting with ruff
 @format:
-  hatch fmt
+  hatch run ruff format
 
 # Lint with hatch
 @lint:

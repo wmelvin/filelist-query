@@ -14,6 +14,7 @@ select_pred_options = [
     "or",
 ]
 
+
 @dataclass
 class PredicateAttrs:
     pred_type: str = ""
@@ -123,7 +124,5 @@ class CriteriaTab(TabPane):
             if pa.field and pa.condition and pa.criteria:
                 if text:
                     text += f" {pa.pred_type} "
-                text += (
-                    f"{pa.field}{cond_sql_frag(pa.condition).format(pa.criteria)}"
-                )
+                text += f"{pa.field}{cond_sql_frag(pa.condition).format(pa.criteria)}"
         return text

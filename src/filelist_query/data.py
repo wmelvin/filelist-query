@@ -10,6 +10,7 @@ from textual.widgets import DataTable
 
 RESULT_ROW_LIMIT = 2000
 
+
 @dataclass
 class DbColumnInfo:
     name: str
