@@ -6,7 +6,12 @@ from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.widgets import Footer, Header, Static, TabbedContent, TabPane
 
-from filelist_query.data import exclude_dirs_clause, get_db_file, populate_data_table
+from filelist_query.data import (
+    exclude_dirs_clause,
+    get_db_file,
+    get_default_sql,
+    populate_data_table,
+)
 from filelist_query.tab_criteria import CriteriaTab
 from filelist_query.tab_fields import FieldsTab
 from filelist_query.tab_query import QueryTab
@@ -26,6 +31,8 @@ class UI(App):
     CSS_PATH = "style.tcss"
 
     def __init__(self, db_file: str | Path = None):
+        self._bypass_selections: bool = False
+        self._default_sql: str = ""
         if db_file is None:
             self._db_file = get_db_file()
         elif isinstance(db_file, str):
@@ -62,6 +69,9 @@ class UI(App):
     def update_results(self):
         query_tab = self.query_one("#query-tab")
         query_text = query_tab.query_one("#query-text")
+        if self._bypass_selections:
+            # Replace SQL in Querytab.
+            query_text.text = self._default_sql
         text = query_text.text
         results_table = self.query_one("#results-table")
         results_table.clear(columns=True)
@@ -88,6 +98,11 @@ class UI(App):
     def action_exit_app(self) -> None:
         self.exit()
 
+    def bypass_selections(self, default_sql: str) -> None:
+        if default_sql:
+            self._bypass_selections = True
+            self._default_sql = default_sql
+
     @property
     def db_file(self) -> Path:
         return self._db_file
@@ -96,4 +111,5 @@ class UI(App):
 if __name__ == "__main__":
     ui = UI()
     # print(f"\n{ui.db_file = }")
+    ui.bypass_selections(get_default_sql())
     ui.run()

@@ -49,6 +49,11 @@ def get_db_file() -> Path:
     return None
 
 
+def get_default_sql() -> str:
+    dotenv.load_dotenv()
+    return os.environ.get("FILELIST_QUERY_DEFAULT_SQL")
+
+
 def list_columns(con: sqlite3.Connection, table: str) -> list[DbColumnInfo]:
     cur = con.cursor()
     # https://www.sqlite.org/pragma.html#pragma_table_info

@@ -4,6 +4,10 @@
 # If no file is specified via the cli, open this file:
 FILELIST_QUERY_DEFAULT_FILE=""
 
-# If no file is specified via the cli, and no default file is set, open the
-# most recent file in this directory:
+# If no file is specified via the cli, and no default file is set, 
+# open the most recent file in this directory:
 FILELIST_QUERY_DIR_LATEST=""
+
+# SQL statement to use when bypassing field and criteria selection
+# during development:
+FILELIST_QUERY_DEFAULT_SQL=""
