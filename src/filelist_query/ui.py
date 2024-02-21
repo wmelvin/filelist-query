@@ -43,13 +43,13 @@ class UI(App):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        yield Footer()
         with TabbedContent(initial="fields-tab"):
             yield FileTab("File", id="file-tab")
             yield FieldsTab("Fields", id="fields-tab")
             yield CriteriaTab("Criteria", id="criteria-tab")
             yield QueryTab("Query", id="query-tab")
             yield ResultsTab("Results", id="results-tab")
+        yield Footer()
 
     def update_criteria(self):
         criteria_tab = self.query_one("#criteria-tab")

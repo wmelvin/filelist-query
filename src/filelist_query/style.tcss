@@ -75,3 +75,14 @@ Predicate Input {
     margin: 1;
     visibility: visible;
 }
+
+/* ResultsTab */
+
+ResultsTab {
+    margin: 0;
+    padding: 0;
+}
+
+#results-table {
+    height: 1fr;
+}
