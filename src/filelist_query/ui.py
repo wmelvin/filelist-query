@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from pathlib import Path
 
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.widgets import Footer, Header, Static, TabbedContent, TabPane
 
+from filelist_query.app_data import AppData, QueryAttrs
 from filelist_query.data import (
     exclude_dirs_clause,
     get_db_file,
@@ -33,6 +35,7 @@ class UI(App):
     def __init__(self, db_file: str | Path = None):
         self._bypass_selections: bool = False
         self._default_sql: str = ""
+        self._app_data = AppData()
         if db_file is None:
             self._db_file = get_db_file()
         elif isinstance(db_file, str):
@@ -91,6 +94,9 @@ class UI(App):
             self.update_query()
         elif label == "Criteria":
             self.update_criteria()
+        elif label == "File":
+            # TODO: Temporary for initial development.
+            self.save_app_data()
 
     def action_toggle_dark(self) -> None:
         self.dark = not self.dark
@@ -102,6 +108,23 @@ class UI(App):
         if default_sql:
             self._bypass_selections = True
             self._default_sql = default_sql
+
+    def save_app_data(self) -> None:
+        # fields = self.query_one("#fields_list")
+        # selected = self.query_one("#selected_list")
+        qry = QueryAttrs()
+        qry.data_file = str(self.db_file)
+
+        # TODO:
+        # qry.columns_all = []
+        # qry.columns_selected = []
+        # qry.predicates = []
+
+        qry.default_sql = self._default_sql
+        qry.last_sql = self.query_one("#query-text").text
+        qry.last_run_dt = datetime.now(timezone.utc)  # TODO: Set when query is run.
+        self._app_data.current_query = qry
+        self._app_data.save()
 
     @property
     def db_file(self) -> Path:
