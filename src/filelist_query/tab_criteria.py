@@ -93,20 +93,8 @@ class CriteriaTab(TabPane):
         new_pred.add_class("added")
         new_pred.scroll_visible()
 
-    def get_predicates(self):
-        predicates = []
-        for pred in self.query(Predicate):
-            pa = pred.pred_attrs
-            if pa.field and pa.condition and pa.criteria:
-                predicates.append(  # noqa: PERF401
-                    (
-                        pa.pred_type,
-                        pa.field,
-                        pa.condition,
-                        pa.criteria,
-                    )
-                )
-        return predicates
+    def get_predicates(self) -> list[PredicateAttrs]:
+        return [pred.pred_attrs for pred in self.query(Predicate)]
 
     def get_predicates_str(self):
         text = ""

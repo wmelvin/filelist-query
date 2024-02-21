@@ -110,19 +110,19 @@ class UI(App):
             self._default_sql = default_sql
 
     def save_app_data(self) -> None:
-        # fields = self.query_one("#fields_list")
-        # selected = self.query_one("#selected_list")
+        fields_tab = self.query_one("#fields-tab")
+        criteria_tab = self.query_one("#criteria-tab")
+        query_text = self.query_one("#query-text")
+
         qry = QueryAttrs()
         qry.data_file = str(self.db_file)
-
-        # TODO:
-        # qry.columns_all = []
-        # qry.columns_selected = []
-        # qry.predicates = []
-
+        qry.columns_all = fields_tab.get_all_fields()
+        qry.columns_selected = fields_tab.get_selected_fields()
+        qry.predicates = criteria_tab.get_predicates()
         qry.default_sql = self._default_sql
-        qry.last_sql = self.query_one("#query-text").text
+        qry.last_sql = query_text.text
         qry.last_run_dt = datetime.now(timezone.utc)  # TODO: Set when query is run.
+
         self._app_data.current_query = qry
         self._app_data.save()
 

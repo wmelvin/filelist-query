@@ -113,6 +113,9 @@ class FieldsTab(TabPane):
             for ix in range(selected_list.option_count)
         ]
 
+    def get_all_fields(self) -> list[str]:
+        return [col.name for col in self._data_columns]
+
     def get_column_type(self, column_name: str) -> str:
         for col in self._data_columns:
             if col.name == column_name:

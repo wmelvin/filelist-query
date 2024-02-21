@@ -30,6 +30,7 @@ class QueryAttrs:
     def as_dict(self) -> dict:
         d = self.__dict__
         d["last_run_dt"] = self.last_run_dt.isoformat()
+        d["predicates"] = [p.__dict__ for p in self.predicates]
         return d
 
 
