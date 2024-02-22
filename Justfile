@@ -1,6 +1,10 @@
 @default:
   @just --list
 
+# Run test, lint, check, hatch build
+@build: test lint check
+  hatch build
+
 # Check formatting
 @check:
   hatch fmt --check

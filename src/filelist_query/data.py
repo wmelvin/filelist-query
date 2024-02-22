@@ -14,7 +14,7 @@ RESULT_ROW_LIMIT = 2000
 @dataclass
 class DbColumnInfo:
     name: str
-    type: str
+    datatype: str
 
 
 def run_sql(cur: sqlite3.Cursor, stmt: str, data=None):

@@ -8,7 +8,7 @@ COND_TYPE_NUM = 1
 
 @dataclass
 class ConditionItem:
-    type: int
+    type_code: int
     display_name: str
     sql_fragment: str
 
@@ -34,7 +34,9 @@ conditions_dict = {
 def get_cond_select_list(db_col_type: str) -> list[tuple[str, int]]:
     cond_type = COND_TYPE_STR if db_col_type == "TEXT" else COND_TYPE_NUM
     return [
-        (v.display_name, k) for k, v in conditions_dict.items() if v.type == cond_type
+        (v.display_name, k)
+        for k, v in conditions_dict.items()
+        if v.type_code == cond_type
     ]
 
 

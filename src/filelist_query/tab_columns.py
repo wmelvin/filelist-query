@@ -119,5 +119,5 @@ class ColumnsTab(TabPane):
     def get_column_type(self, column_name: str) -> str:
         for col in self._data_columns:
             if col.name == column_name:
-                return col.type
+                return col.datatype
         return None
