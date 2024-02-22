@@ -32,10 +32,13 @@ dependencies = [
   "platformdirs",
 ]
 
-# [project.urls]
-# Documentation = "https://github.com/unknown/filelist-query#readme"
-# Issues = "https://github.com/unknown/filelist-query/issues"
-# Source = "https://github.com/unknown/filelist-query"
+[project.urls]
+Documentation = "https://github.com/wmelvin/filelist-query#readme"
+Source = "https://github.com/wmelvin/filelist-query"
+
+[project.scripts]
+flq = "filelist_query.cli:run"
+filelist_query = "filelist_query.cli:run"
 
 [tool.hatch.version]
 path = "src/filelist_query/__about__.py"

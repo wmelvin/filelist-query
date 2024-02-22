@@ -2,7 +2,7 @@
 
 Textual user interface for querying databases created by filelist-tools.
 
-**Development work in progress - not usable as is**
+> Development work in progress - *barely* usable as is.
 
 ## Reference
 
