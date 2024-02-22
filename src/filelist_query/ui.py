@@ -14,8 +14,8 @@ from filelist_query.data import (
     get_default_sql,
     populate_data_table,
 )
+from filelist_query.tab_columns import ColumnsTab
 from filelist_query.tab_criteria import CriteriaTab
-from filelist_query.tab_fields import FieldsTab
 from filelist_query.tab_query import QueryTab
 from filelist_query.tab_results import ResultsTab
 
@@ -46,9 +46,9 @@ class UI(App):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        with TabbedContent(initial="fields-tab"):
+        with TabbedContent(initial="columns-tab"):
             yield FileTab("File", id="file-tab")
-            yield FieldsTab("Fields", id="fields-tab")
+            yield ColumnsTab("Columns", id="columns-tab")
             yield CriteriaTab("Criteria", id="criteria-tab")
             yield QueryTab("Query", id="query-tab")
             yield ResultsTab("Results", id="results-tab")
@@ -56,16 +56,16 @@ class UI(App):
 
     def update_criteria(self):
         criteria_tab = self.query_one("#criteria-tab")
-        criteria_tab.update_fields()
+        criteria_tab.update_columns()
 
     def update_query(self):
-        fields_tab = self.query_one("#fields-tab")
-        selected_fields = fields_tab.get_selected_fields()
+        columns_tab = self.query_one("#columns-tab")
+        selected_columns = columns_tab.get_selected_columns()
         criteria_tab = self.query_one("#criteria-tab")
         predicates = criteria_tab.get_predicates_str()
         query_text = self.query_one("#query-text")
         query_text.text = (
-            f"SELECT {', '.join(selected_fields)}\nFROM view_filelist\n"
+            f"SELECT {', '.join(selected_columns)}\nFROM view_filelist\n"
             f"WHERE {predicates}\n{exclude_dirs_clause()}"
         )
 
@@ -110,14 +110,14 @@ class UI(App):
             self._default_sql = default_sql
 
     def save_app_data(self) -> None:
-        fields_tab = self.query_one("#fields-tab")
+        columns_tab = self.query_one("#columns-tab")
         criteria_tab = self.query_one("#criteria-tab")
         query_text = self.query_one("#query-text")
 
         qry = QueryAttrs()
         qry.data_file = str(self.db_file)
-        qry.columns_all = fields_tab.get_all_fields()
-        qry.columns_selected = fields_tab.get_selected_fields()
+        qry.columns_all = columns_tab.get_all_columns()
+        qry.columns_selected = columns_tab.get_selected_columns()
         qry.predicates = criteria_tab.get_predicates()
         qry.default_sql = self._default_sql
         qry.last_sql = query_text.text

@@ -13,7 +13,7 @@ APP_NAME = "filelist_query"
 @dataclass
 class PredicateAttrs:
     pred_type: str = ""
-    field: str = ""
+    column: str = ""
     condition: int = 0
     criteria: str = ""
 

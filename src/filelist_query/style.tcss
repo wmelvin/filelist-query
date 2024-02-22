@@ -11,15 +11,15 @@ Static {
     background: $success;
 }
 
-/* FieldsTab */
+/* ColumnsTab */
 
-FieldsTab OptionList {
+ColumnsTab OptionList {
     width: 20;
     height: auto;
     margin: 2 2;
 }
 
-FieldsTab Button {
+ColumnsTab Button {
     width: 10;
 }
 
@@ -53,7 +53,7 @@ Predicate #select_pred {
     width: 10;
 }
 
-Predicate #select_field {
+Predicate #select_column {
     width: 20;
 }
 

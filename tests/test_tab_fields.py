@@ -3,11 +3,11 @@ from filelist_query.ui import UI
 from textual.widgets import OptionList
 
 
-async def test_field_list():
+async def test_column_list():
     app = UI()
     async with app.run_test() as pilot:
-        ft = pilot.app.query_one("#fields-tab")
-        fl = ft.query_one("#field_list")
+        ft = pilot.app.query_one("#columns-tab")
+        fl = ft.query_one("#column_list")
         assert fl
         assert fl.option_count > 0
 
@@ -22,7 +22,7 @@ async def move_options(pilot):
     sc = pilot.app.screen
     assert sc
 
-    fld_lst = pilot.app.query_one("#field_list")
+    fld_lst = pilot.app.query_one("#column_list")
     assert isinstance(fld_lst, OptionList)
     assert fld_lst.option_count > 0
 

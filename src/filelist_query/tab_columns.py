@@ -8,14 +8,14 @@ from textual.widgets.option_list import Option
 from filelist_query.data import DbColumnInfo, get_db_table_columns
 
 
-class FieldsTab(TabPane):
+class ColumnsTab(TabPane):
     def __init__(self, title, id) -> None:  # noqa: A002
         super().__init__(title, id=id)
         self._data_columns: list[DbColumnInfo] = None
 
     def compose(self) -> ComposeResult:
         yield Horizontal(
-            OptionList(id="field_list"),
+            OptionList(id="column_list"),
             VerticalScroll(
                 Button("Add", id="add"),
                 Button("Remove", id="remove"),
@@ -36,16 +36,16 @@ class FieldsTab(TabPane):
 
     def on_mount(self) -> None:
         self._load_column_info()
-        field_list = self.query_one("#field_list")
-        for field in self._data_columns:
-            field_list.add_option(Option(field.name))
+        column_list = self.query_one("#column_list")
+        for column in self._data_columns:
+            column_list.add_option(Option(column.name))
             #  Add file_name by default.
-            if field.name == "file_name":
-                self.select_field("file_name")
+            if column.name == "file_name":
+                self.select_column("file_name")
 
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
-        if event.option_list.id == "field_list":
-            self.title = f"Field: {event.option.prompt}"
+        if event.option_list.id == "column_list":
+            self.title = f"Column: {event.option.prompt}"
             self.query_one("#add").add_class("active")
             self.query_one("#remove").remove_class("active")
             self.query_one("#up").remove_class("active")
@@ -78,11 +78,11 @@ class FieldsTab(TabPane):
         if not event.button.has_class("active"):
             return
         if event.button.id == "add":
-            field_list = self.query_one("#field_list")
-            ix = field_list.highlighted
+            column_list = self.query_one("#column_list")
+            ix = column_list.highlighted
             if ix is not None:
-                sel = field_list.get_option_at_index(ix).prompt
-                self.select_field(sel)
+                sel = column_list.get_option_at_index(ix).prompt
+                self.select_column(sel)
         elif event.button.id == "remove":
             selected_list = self.query_one("#selected_list")
             ix = selected_list.highlighted
@@ -93,27 +93,27 @@ class FieldsTab(TabPane):
         elif event.button.id == "down":
             self.swap_prompt(True)
 
-    def is_selected(self, field: str) -> bool:
+    def is_selected(self, column: str) -> bool:
         selected_list = self.query_one("#selected_list")
         for ix in range(selected_list.option_count):
-            if selected_list.get_option_at_index(ix).prompt == field:
+            if selected_list.get_option_at_index(ix).prompt == column:
                 return True
         return False
 
-    def select_field(self, field: str) -> None:
-        if self.is_selected(field):
+    def select_column(self, column: str) -> None:
+        if self.is_selected(column):
             return
         selected_list = self.query_one("#selected_list")
-        selected_list.add_option(Option(field))
+        selected_list.add_option(Option(column))
 
-    def get_selected_fields(self) -> list[str]:
+    def get_selected_columns(self) -> list[str]:
         selected_list = self.query_one("#selected_list")
         return [
             selected_list.get_option_at_index(ix).prompt
             for ix in range(selected_list.option_count)
         ]
 
-    def get_all_fields(self) -> list[str]:
+    def get_all_columns(self) -> list[str]:
         return [col.name for col in self._data_columns]
 
     def get_column_type(self, column_name: str) -> str:

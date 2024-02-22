@@ -23,38 +23,38 @@ class Predicate(Static):
         yield Select(((p, p) for p in select_pred_options), id="select_pred")
         yield Select(
             (),
-            id="select_field",
-            prompt="Select field",
+            id="select_column",
+            prompt="Select column",
             allow_blank=True,
         )
         yield Select((), id="select_condition", allow_blank=True)
         yield Input(placeholder="Criteria", id="criteria-input")
 
-    def update_fields(self) -> None:
-        fields_tab = self.app.query_one("#fields-tab")
-        selected_fields = fields_tab.get_selected_fields()
-        sel: Select = self.query_one("#select_field")
-        sel.set_options((fld, fld) for fld in selected_fields)
+    def update_columns(self) -> None:
+        columns_tab = self.app.query_one("#columns-tab")
+        selected_columns = columns_tab.get_selected_columns()
+        sel: Select = self.query_one("#select_column")
+        sel.set_options((fld, fld) for fld in selected_columns)
 
     def on_mount(self) -> None:
-        self.update_fields()
+        self.update_columns()
 
     @on(Select.Changed)
     def select_changed(self, event: Select.Changed) -> None:
         if event.value == Select.BLANK:
             return
-        if event.select.id == "select_field":
-            fields_tab = self.app.query_one("#fields-tab")
+        if event.select.id == "select_column":
+            columns_tab = self.app.query_one("#columns-tab")
 
-            # Field name is in event.value.
-            column_type = fields_tab.get_column_type(event.value)
+            # Column name is in event.value.
+            column_type = columns_tab.get_column_type(event.value)
 
             cond_opts = get_cond_select_list(column_type)
 
             sel: Select = self.query_one("#select_condition")
             sel.set_options(cond_opts)
 
-            self.pred_attrs.field = event.value
+            self.pred_attrs.column = event.value
             self.pred_attrs.condition = 0
         elif event.select.id == "select_condition":
             self.pred_attrs.condition = event.value
@@ -76,10 +76,10 @@ class CriteriaTab(TabPane):
     def compose(self) -> ComposeResult:
         yield ScrollableContainer(Predicate(), id="predicates")
 
-    def update_fields(self) -> None:
+    def update_columns(self) -> None:
         predicates = self.query(Predicate)
         for pred in predicates:
-            pred.update_fields()
+            pred.update_columns()
 
     def update_title(self) -> None:
         text = self.get_predicates_str()
@@ -100,8 +100,8 @@ class CriteriaTab(TabPane):
         text = ""
         for pred in self.query(Predicate):
             pa = pred.pred_attrs
-            if pa.field and pa.condition and pa.criteria:
+            if pa.column and pa.condition and pa.criteria:
                 if text:
                     text += f" {pa.pred_type} "
-                text += f"{pa.field}{cond_sql_frag(pa.condition).format(pa.criteria)}"
+                text += f"{pa.column}{cond_sql_frag(pa.condition).format(pa.criteria)}"
         return text
