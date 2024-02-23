@@ -5,6 +5,7 @@ from textual.containers import Horizontal, VerticalScroll
 from textual.widgets import Button, OptionList, TabPane
 from textual.widgets.option_list import Option
 
+from filelist_query.app_data import QueryAttrs
 from filelist_query.data import DbColumnInfo, get_db_table_columns
 
 
@@ -34,14 +35,20 @@ class ColumnsTab(TabPane):
     def _load_column_info(self) -> None:
         self._data_columns = get_db_table_columns(self.app.db_file, "view_filelist")
 
-    def on_mount(self) -> None:
-        self._load_column_info()
+    def set_columns(self, query_attrs: QueryAttrs):
         column_list = self.query_one("#column_list")
-        for column in self._data_columns:
-            column_list.add_option(Option(column.name))
-            #  Add file_name by default.
-            if column.name == "file_name":
-                self.select_column("file_name")
+        selected_list = self.query_one("#selected_list")
+        self._load_column_info()
+
+        for col in self._data_columns:
+            column_list.add_option(Option(col.name))
+
+        for sel_col in query_attrs.columns_selected:
+            self.select_column(sel_col)
+
+        #  Add file_name by default if no columns selected.
+        if selected_list.option_count == 0:
+            self.select_column("file_name")
 
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
         if event.option_list.id == "column_list":
@@ -57,9 +64,11 @@ class ColumnsTab(TabPane):
             self.query_one("#up").add_class("active")
             self.query_one("#down").add_class("active")
 
-    # There is no direct access to the list of options, so swapping the
-    # prompt seems to be the way to move items (prompts) up and down.
     def swap_prompt(self, move_down: bool) -> None:
+        """Swap the prompt of the highlighted item with the one above or below.
+        There is no direct access to the list of options, so swapping the
+        prompt seems to be the way to move items (prompts) up and down.
+        """
         opt_list = self.query_one("#selected_list")
         ix_a = opt_list.highlighted
         if ix_a is None:
@@ -112,9 +121,6 @@ class ColumnsTab(TabPane):
             selected_list.get_option_at_index(ix).prompt
             for ix in range(selected_list.option_count)
         ]
-
-    def get_all_columns(self) -> list[str]:
-        return [col.name for col in self._data_columns]
 
     def get_column_type(self, column_name: str) -> str:
         for col in self._data_columns:

@@ -54,6 +54,15 @@ class UI(App):
             yield ResultsTab("Results", id="results-tab")
         yield Footer()
 
+    def on_mount(self) -> None:
+        self._app_data.load()
+        if self._app_data.current_query.last_sql:
+            query_text = self.query_one("#query-text")
+            query_text.text = self._app_data.current_query.last_sql
+        columns_tab = self.query_one("#columns-tab")
+        columns_tab.set_columns(self._app_data.current_query)
+        # TODO: Set other tab data from AppData.
+
     def update_criteria(self):
         criteria_tab = self.query_one("#criteria-tab")
         criteria_tab.update_columns()
@@ -116,7 +125,6 @@ class UI(App):
 
         qry = QueryAttrs()
         qry.data_file = str(self.db_file)
-        qry.columns_all = columns_tab.get_all_columns()
         qry.columns_selected = columns_tab.get_selected_columns()
         qry.predicates = criteria_tab.get_predicates()
         qry.default_sql = self._default_sql
