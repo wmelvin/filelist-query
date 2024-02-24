@@ -65,7 +65,7 @@ class UI(App):
 
     def update_criteria(self):
         criteria_tab = self.query_one("#criteria-tab")
-        criteria_tab.update_columns()
+        criteria_tab.update_predicates_columns()
 
     def update_query(self):
         columns_tab = self.query_one("#columns-tab")

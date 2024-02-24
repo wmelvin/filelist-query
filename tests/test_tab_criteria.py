@@ -9,11 +9,11 @@ async def test_criteria_tab():
         ct = pilot.app.query_one("#criteria-tab")
         assert ct
         # There should initially be one predicate.
-        select_pred = ct.query_one("#select_pred")
+        select_pred = ct.query_one("#select-pred")
         assert select_pred
-        select_column = ct.query_one("#select_column")
+        select_column = ct.query_one("#select-column")
         assert select_column
-        select_condition = ct.query_one("#select_condition")
+        select_condition = ct.query_one("#select-condition")
         assert select_condition
         criteria_input = ct.query_one("#criteria-input")
         assert criteria_input

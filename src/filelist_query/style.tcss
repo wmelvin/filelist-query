@@ -37,7 +37,7 @@ ColumnsTab Button {
 
 CriteriaTab ScrollableContainer {
     margin: 0;
-    width: 100%;
+    width: 1fr;
 }
 
 Predicate {
@@ -49,15 +49,15 @@ Predicate Select {
     margin: 1;
 }
 
-Predicate #select_pred {
+Predicate #select-pred {
     width: 10;
 }
 
-Predicate #select_column {
+Predicate #select-column {
     width: 20;
 }
 
-Predicate #select_condition {
+Predicate #select-condition {
     width: 30;
 }
 
@@ -66,11 +66,11 @@ Predicate Input {
     width: 40;
 }
 
-#select_pred {
+#select-pred {
     visibility: hidden;
 }
 
-.added #select_pred {
+.added #select-pred {
     width: 16;
     margin: 1;
     visibility: visible;
