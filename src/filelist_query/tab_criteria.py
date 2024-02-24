@@ -60,12 +60,12 @@ class Predicate(Static):
             self.pred_attrs.condition = event.value
         elif event.select.id == "select_pred":
             self.pred_attrs.pred_type = event.value
-        self.app.query_one(CriteriaTab).update_title()
+        # self.app.query_one(CriteriaTab).update_title()
 
     @on(Input.Changed)
     def set_query(self, event: Input.Changed) -> None:
         self.pred_attrs.criteria = event.value
-        self.app.query_one(CriteriaTab).update_title()
+        # self.app.query_one(CriteriaTab).update_title()
 
 
 class CriteriaTab(TabPane):
@@ -81,11 +81,11 @@ class CriteriaTab(TabPane):
         for pred in predicates:
             pred.update_columns()
 
-    def update_title(self) -> None:
-        text = self.get_predicates_str()
-        if not text:
-            text = "Select"
-        self.app.title = text
+    # def update_title(self) -> None:
+    #     text = self.get_predicates_str()
+    #     if not text:
+    #         text = "Select"
+    #     self.app.title = text
 
     def action_add_predicate(self) -> None:
         new_pred = Predicate()

@@ -1,7 +1,6 @@
 import pytest
-from textual.widgets import OptionList
-
 from filelist_query.ui import UI
+from textual.widgets import OptionList
 
 
 async def test_column_list():
