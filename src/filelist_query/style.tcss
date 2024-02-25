@@ -42,28 +42,51 @@ CriteriaTab ScrollableContainer {
 
 Predicate {
     layout: horizontal;
+    margin: 0;
+    padding: 0;
     content-align: left middle;
 }
 
 Predicate Select {
-    margin: 1;
+    margin: 0;
+    padding: 0;
 }
 
 Predicate #select-pred {
-    width: 10;
+    width: 1fr;
 }
 
 Predicate #select-column {
-    width: 20;
+    width: 2fr;
 }
 
 Predicate #select-condition {
-    width: 30;
+    width: 3fr;
 }
 
 Predicate Input {
-    margin: 1;
-    width: 40;
+    margin: 0;
+    width: 4fr
+}
+
+Predicate #add-predicate {
+    margin: 0;
+    max-width: 5;
+    color: green;
+}
+
+Predicate #del-predicate {
+    margin: 0;
+    max-width: 5;
+    color: red;
+}
+
+#del-predicate {
+    visibility: hidden;
+}
+
+.added #del-predicate {
+    visibility: visible;
 }
 
 #select-pred {
@@ -71,8 +94,6 @@ Predicate Input {
 }
 
 .added #select-pred {
-    width: 16;
-    margin: 1;
     visibility: visible;
 }
 

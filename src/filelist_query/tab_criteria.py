@@ -3,15 +3,12 @@ from __future__ import annotations
 from textual import on
 from textual.app import ComposeResult
 from textual.containers import ScrollableContainer
-from textual.widgets import Input, Select, Static, TabPane
+from textual.widgets import Button, Input, Select, Static, TabPane
 
 from filelist_query.app_data import PredicateAttrs
 from filelist_query.cond_opts import cond_sql_frag, get_cond_select_list
 
-select_pred_options = [
-    "and",
-    "or",
-]
+select_pred_options = ["and", "or"]
 
 
 class Predicate(Static):
@@ -29,6 +26,8 @@ class Predicate(Static):
         )
         yield Select((), id="select-condition", allow_blank=True)
         yield Input(placeholder="Criteria", id="criteria-input")
+        yield Button("+", id="add-predicate")
+        yield Button("-", id="del-predicate")
 
     def update_column_options(self) -> None:
         columns_tab = self.app.query_one("#columns-tab")
@@ -49,10 +48,13 @@ class Predicate(Static):
             # Column name is in event.value.
             column_type = columns_tab.get_column_type(event.value)
 
-            cond_opts = get_cond_select_list(column_type)
+            prev_type = columns_tab.get_column_type(self.pred_attrs.column)
 
-            sel: Select = self.query_one("#select-condition")
-            sel.set_options(cond_opts)
+            # Update the list of conditions if the type has changed.
+            if column_type != prev_type:
+                cond_opts = get_cond_select_list(column_type)
+                sel: Select = self.query_one("#select-condition")
+                sel.set_options(cond_opts)
 
             self.pred_attrs.column = event.value
             self.pred_attrs.condition = 0
@@ -60,12 +62,10 @@ class Predicate(Static):
             self.pred_attrs.condition = event.value
         elif event.select.id == "select-pred":
             self.pred_attrs.pred_type = event.value
-        # self.app.query_one(CriteriaTab).update_title()
 
     @on(Input.Changed)
     def set_query(self, event: Input.Changed) -> None:
         self.pred_attrs.criteria = event.value
-        # self.app.query_one(CriteriaTab).update_title()
 
 
 class CriteriaTab(TabPane):
@@ -81,17 +81,18 @@ class CriteriaTab(TabPane):
         for pred in predicates:
             pred.update_column_options()
 
-    # def update_title(self) -> None:
-    #     text = self.get_predicates_str()
-    #     if not text:
-    #         text = "Select"
-    #     self.app.title = text
-
-    def action_add_predicate(self) -> None:
+    def add_predicate(self) -> None:
         new_pred = Predicate()
         self.query_one("#predicates").mount(new_pred)
         new_pred.add_class("added")
         new_pred.scroll_visible()
+
+    def action_add_predicate(self) -> None:
+        self.add_predicate()
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "add-predicate":
+            self.add_predicate()
 
     def get_predicates(self) -> list[PredicateAttrs]:
         return [pred.pred_attrs for pred in self.query(Predicate)]

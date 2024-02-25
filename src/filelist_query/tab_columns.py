@@ -126,4 +126,4 @@ class ColumnsTab(TabPane):
         for col in self._data_columns:
             if col.name == column_name:
                 return col.datatype
-        return None
+        return ""
