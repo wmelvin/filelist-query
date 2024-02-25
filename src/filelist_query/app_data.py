@@ -21,11 +21,11 @@ class PredicateAttrs:
 
 class QueryAttrs:
     data_file: str = ""
-    columns_selected: list[str]
-    predicates: list[PredicateAttrs]
-    default_sql: str
-    last_sql: str
-    last_run_dt: datetime
+    columns_selected: list[str] = []
+    predicates: list[PredicateAttrs] = []
+    default_sql: str = ""
+    last_sql: str = ""
+    last_run_dt: datetime | None = None
 
     def as_dict(self) -> dict:
         """Return a dictionary representation that is serializable to JSON."""

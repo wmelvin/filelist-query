@@ -7,7 +7,7 @@
 
 # Check formatting
 @check:
-  hatch fmt --check
+  hatch run ruff format --check
 
 # Remove dist
 @clean:
@@ -18,9 +18,9 @@
 @format:
   hatch run ruff format
 
-# Lint with hatch
+# Lint with ruff
 @lint:
-  hatch fmt --linter
+  hatch run ruff check
 
 # Run pytest
 @test:
