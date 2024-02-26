@@ -4,7 +4,7 @@ from textual.widgets import DataTable
 
 
 async def test_results_tab():
-    app = UI()
+    app = UI(do_load=False)
     async with app.run_test() as pilot:
         rt = pilot.app.query_one("#results-tab")
         assert rt

@@ -32,7 +32,8 @@ class UI(App):
     ]
     CSS_PATH = "style.tcss"
 
-    def __init__(self, db_file: str | Path = None):
+    def __init__(self, db_file: str | Path = None, do_load: bool = True):
+        self._do_load_app_data = do_load
         self._bypass_selections: bool = False
         self._default_sql: str = ""
         self._app_data = AppData()
@@ -55,17 +56,22 @@ class UI(App):
         yield Footer()
 
     def on_mount(self) -> None:
-        self._app_data.load()
+        if self._do_load_app_data:
+            self._app_data.load()
         if self._app_data.current_query.last_sql:
             query_text = self.query_one("#query-text")
             query_text.text = self._app_data.current_query.last_sql
         columns_tab = self.query_one("#columns-tab")
         columns_tab.set_columns(self._app_data.current_query)
+        if self._app_data.current_query.predicates:
+            criteria_tab = self.query_one("#criteria-tab")
+            criteria_tab.set_predicates(self._app_data.current_query.predicates)
         # TODO: Set other tab data from AppData.
 
     def update_criteria(self):
         criteria_tab = self.query_one("#criteria-tab")
-        criteria_tab.update_predicates_columns()
+        criteria_tab.sync_predicates()
+        # criteria_tab.update_predicates_columns()
 
     def update_query(self):
         columns_tab = self.query_one("#columns-tab")

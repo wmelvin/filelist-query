@@ -4,7 +4,7 @@ from textual.widgets import OptionList
 
 
 async def test_column_list():
-    app = UI()
+    app = UI(do_load=False)
     async with app.run_test() as pilot:
         ft = pilot.app.query_one("#columns-tab")
         fl = ft.query_one("#column_list")
@@ -13,7 +13,7 @@ async def test_column_list():
 
 
 async def test_move_options():
-    app = UI()
+    app = UI(do_load=False)
     async with app.run_test() as pilot:
         await move_options(pilot)
 

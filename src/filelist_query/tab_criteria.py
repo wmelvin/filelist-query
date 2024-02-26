@@ -35,6 +35,28 @@ class Predicate(Static):
         sel: Select = self.query_one("#select-column")
         sel.set_options((fld, fld) for fld in selected_columns)
 
+    def set_attrs(self, pred_attrs: PredicateAttrs):
+        self.pred_attrs = pred_attrs
+
+    def sync_attrs(self):
+        self.update_column_options()
+        sel_cond = self.query_one("#select-condition")
+        if self.pred_attrs.pred_type:
+            sel_pred = self.query_one("#select-pred")
+            sel_pred.value = self.pred_attrs.pred_type
+        if self.pred_attrs.column:
+            sel_col = self.query_one("#select-column")
+            sel_col.value = self.pred_attrs.column
+            columns_tab = self.app.query_one("#columns-tab")
+            column_type = columns_tab.get_column_type(self.pred_attrs.column)
+            cond_opts = get_cond_select_list(column_type)
+            sel_cond.set_options(cond_opts)
+        if self.pred_attrs.condition:
+            sel_cond.value = self.pred_attrs.condition
+        if self.pred_attrs.criteria:
+            input_criteria = self.query_one("#criteria-input")
+            input_criteria.value = self.pred_attrs.criteria
+
     def on_mount(self) -> None:
         self.update_column_options()
 
@@ -80,16 +102,16 @@ class CriteriaTab(TabPane):
     def compose(self) -> ComposeResult:
         yield ScrollableContainer(Predicate(), id="predicates")
 
-    def update_predicates_columns(self) -> None:
-        predicates = self.query(Predicate)
-        for pred in predicates:
-            pred.update_column_options()
+    # def update_predicates_columns(self) -> None:
+    #     predicates = self.query(Predicate)
+    #     for pred in predicates:
+    #         pred.update_column_options()
 
     def add_predicate(self) -> None:
         new_pred = Predicate()
-        self.query_one("#predicates").mount(new_pred)
         new_pred.add_class("added")
         new_pred.scroll_visible()
+        self.query_one("#predicates").mount(new_pred)
 
     def action_add_predicate(self) -> None:
         self.add_predicate()
@@ -104,6 +126,18 @@ class CriteriaTab(TabPane):
 
     def get_predicates(self) -> list[PredicateAttrs]:
         return [pred.pred_attrs for pred in self.query(Predicate)]
+
+    def set_predicates(self, pred_attrs: list[PredicateAttrs]) -> None:
+        self.query(Predicate).filter(".added").remove()
+        for _ in range(1, len(pred_attrs)):
+            self.add_predicate()
+        predicates = self.query(Predicate)
+        for pred, pa in zip(predicates, pred_attrs):
+            pred.set_attrs(pa)
+
+    def sync_predicates(self) -> None:
+        for pred in self.query(Predicate):
+            pred.sync_attrs()
 
     def get_predicates_str(self):
         text = ""

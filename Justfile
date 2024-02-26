@@ -29,3 +29,7 @@
 # Run ui.py
 @ui:
   hatch run python3 src/filelist_query/ui.py
+
+# Run ui.py with textual --dev
+@tui:
+  hatch run textual run src/filelist_query/ui.py --dev

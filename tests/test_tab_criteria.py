@@ -4,7 +4,7 @@ from textual.widgets import Select
 
 
 async def test_criteria_tab():
-    app = UI()
+    app = UI(do_load=False)
     async with app.run_test() as pilot:
         ct = pilot.app.query_one("#criteria-tab")
         assert ct

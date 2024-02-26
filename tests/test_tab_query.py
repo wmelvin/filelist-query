@@ -3,7 +3,7 @@ from filelist_query.ui import UI
 
 
 async def test_query_tab():
-    app = UI()
+    app = UI(do_load=False)
     async with app.run_test() as pilot:
         qt = pilot.app.query_one("#query-tab")
         assert qt
