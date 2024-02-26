@@ -52,6 +52,10 @@ Predicate Select {
     padding: 0;
 }
 
+Predicate Button {
+    border: solid darkgray;
+}
+
 Predicate #select-pred {
     width: 1fr;
 }
@@ -75,17 +79,17 @@ Predicate #add-predicate {
     color: green;
 }
 
-Predicate #del-predicate {
+Predicate #remove-predicate {
     margin: 0;
     max-width: 5;
     color: red;
 }
 
-#del-predicate {
+#remove-predicate {
     visibility: hidden;
 }
 
-.added #del-predicate {
+.added #remove-predicate {
     visibility: visible;
 }
 

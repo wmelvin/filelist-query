@@ -27,7 +27,7 @@ class Predicate(Static):
         yield Select((), id="select-condition", allow_blank=True)
         yield Input(placeholder="Criteria", id="criteria-input")
         yield Button("+", id="add-predicate")
-        yield Button("-", id="del-predicate")
+        yield Button("-", id="remove-predicate")
 
     def update_column_options(self) -> None:
         columns_tab = self.app.query_one("#columns-tab")
@@ -67,6 +67,10 @@ class Predicate(Static):
     def set_query(self, event: Input.Changed) -> None:
         self.pred_attrs.criteria = event.value
 
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "remove-predicate":
+            self.add_class("remove-me")
+
 
 class CriteriaTab(TabPane):
     BINDINGS = [
@@ -93,6 +97,10 @@ class CriteriaTab(TabPane):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "add-predicate":
             self.add_predicate()
+        elif event.button.id == "remove-predicate":
+            predicates = self.query(Predicate)
+            if predicates:
+                predicates.filter(".remove-me").remove()
 
     def get_predicates(self) -> list[PredicateAttrs]:
         return [pred.pred_attrs for pred in self.query(Predicate)]
