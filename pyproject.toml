@@ -51,6 +51,9 @@ dependencies = [
   "pytest-asyncio",
   "pytest-textual-snapshot",
   "ruff",
+  # The filelist-tools package is used for testing. It is not available on PyPI, but the wheel is
+  # available on the author's website. New versions are not resolved automatically, so the URL
+  # must be updated manually.
   "filelist-tools@https://bogusoft.com/packages/filelist-tools/filelist_tools-2024.2.2.dev0-py3-none-any.whl",
 ]
 [tool.hatch.envs.default.scripts]
