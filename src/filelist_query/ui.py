@@ -93,10 +93,12 @@ class UI(App):
         text = query_text.text
         results_table = self.query_one("#results-table")
         results_table.clear(columns=True)
-        msg = populate_data_table(self.db_file, results_table, text)
-        if msg:
-            self.title = msg
-            # TODO: Something other than showing an error in the title.
+        msg, err = populate_data_table(self.db_file, results_table, text)
+        self.title = f"{msg} {err}"
+        # TODO: Something other than showing the error in the title.
+        if not err:
+            self.update_app_data()
+            self._app_data.add_to_history()
 
     def on_tabbed_content_tab_activated(
         self, event: TabbedContent.TabActivated
@@ -124,7 +126,7 @@ class UI(App):
             self._bypass_selections = True
             self._default_sql = default_sql
 
-    def save_app_data(self) -> None:
+    def update_app_data(self) -> None:
         columns_tab = self.query_one("#columns-tab")
         criteria_tab = self.query_one("#criteria-tab")
         query_text = self.query_one("#query-text")
@@ -135,9 +137,15 @@ class UI(App):
         qry.predicates = criteria_tab.get_predicates()
         qry.default_sql = self._default_sql
         qry.last_sql = query_text.text
-        qry.last_run_dt = datetime.now(timezone.utc)  # TODO: Set when query is run.
+        qry.last_run_dt = self._app_data.current_query.last_run_dt or datetime.now(
+            timezone.utc
+        )
+        # TODO: Set when query is run.
 
         self._app_data.current_query = qry
+
+    def save_app_data(self) -> None:
+        self.update_app_data()
         self._app_data.save()
 
     @property

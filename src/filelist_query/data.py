@@ -72,7 +72,9 @@ def get_db_table_columns(db_path: Path, table: str) -> list[DbColumnInfo]:
     return columns
 
 
-def populate_data_table(db_file: Path, data_table: DataTable, stmt: str) -> str:
+def populate_data_table(
+    db_file: Path, data_table: DataTable, stmt: str
+) -> tuple[str, str]:
     """Populate a DataTable with the results of a SQL statement.
     The DataTable should be empty before calling this function.
 
@@ -82,13 +84,15 @@ def populate_data_table(db_file: Path, data_table: DataTable, stmt: str) -> str:
     * Adds the columns to the DataTable.
     * Adds the rows to the DataTable.
     * Closes the connection to the database file.
+    * Returns a tuple of messages and errors.
 
     params: db_file: pathlib.Path
     params: data_table: textual.widgets.DataTable
     params: stmt: str
-    return: str
+    return: tuple[str, str]
     """
-    result = ""
+    msg = ""
+    err = ""
     mtime_before = db_file.stat().st_mtime
     con = sqlite3.connect(str(db_file))
     cur = con.cursor()
@@ -98,15 +102,19 @@ def populate_data_table(db_file: Path, data_table: DataTable, stmt: str) -> str:
         data_table.add_columns(*columns)
         for row in cur.fetchmany(RESULT_ROW_LIMIT):
             data_table.add_row(*row)
+        row_count = data_table.row_count
+        msg = f"Rows returned = {row_count}"
+        if row_count >= RESULT_ROW_LIMIT:
+            msg += f" (limit of {RESULT_ROW_LIMIT} rows reached)"
     except sqlite3.OperationalError as e:
-        result = f"ERROR in SQL: {e}"
+        err = f"ERROR in SQL: {e}"
     finally:
         cur.close()
         con.rollback()
         con.close()
         # The SQLite database file should not be modified.
         assert db_file.stat().st_mtime == mtime_before  # noqa: S101
-    return result
+    return (msg, err)
 
 
 def exclude_dirs_clause() -> str:
