@@ -29,4 +29,3 @@ async def test_app_loads(tmp_filelist_db):
     app = UI(do_load=False, db_file=tmp_filelist_db)
     async with app.run_test() as pilot:
         assert str(pilot.app.db_file) == str(tmp_filelist_db)
-

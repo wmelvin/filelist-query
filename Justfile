@@ -9,6 +9,9 @@
 @check:
   hatch run ruff format --check
 
+# Run check and lint
+@checks: check lint
+
 # Remove dist
 @clean:
   rm dist/*

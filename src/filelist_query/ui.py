@@ -14,6 +14,7 @@ from filelist_query.data import (
     get_default_sql,
     populate_data_table,
 )
+from filelist_query.sc_history import HistoryScreen
 from filelist_query.tab_columns import ColumnsTab
 from filelist_query.tab_criteria import CriteriaTab
 from filelist_query.tab_query import QueryTab
@@ -29,6 +30,7 @@ class UI(App):
     BINDINGS = [
         Binding("ctrl+x", "exit_app", "eXit", priority=True),
         ("d", "toggle_dark", "Toggle dark mode"),
+        ("h", "load_history", "load History"),
     ]
     CSS_PATH = "style.tcss"
 
@@ -117,6 +119,9 @@ class UI(App):
 
     def action_toggle_dark(self) -> None:
         self.dark = not self.dark
+
+    def action_load_history(self) -> None:
+        self.push_screen(HistoryScreen())
 
     def action_exit_app(self) -> None:
         self.exit()
