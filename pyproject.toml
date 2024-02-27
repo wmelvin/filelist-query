@@ -51,6 +51,7 @@ dependencies = [
   "pytest-asyncio",
   "pytest-textual-snapshot",
   "ruff",
+  "filelist-tools@https://bogusoft.com/packages/filelist-tools/filelist_tools-2024.2.2.dev0-py3-none-any.whl",
 ]
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
