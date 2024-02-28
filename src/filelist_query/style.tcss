@@ -118,12 +118,24 @@ HistoryScreen Horizontal {
     align: center middle;
     height: 1fr;
 }
+
+HistoryScreen Markdown {
+    align: left middle;
+    text-align: left;
+}
+
+HistoryScreen .warning {
+    color: yellow;
+}
+
 #load-button, #close-button {
     border: solid gray;
 }
+
 #sql-text {
     height: 2fr;
 }
+
 #history-list {
     height: 4fr;
 }

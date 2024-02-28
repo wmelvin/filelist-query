@@ -153,6 +153,9 @@ class UI(App):
         self.update_app_data()
         self._app_data.save()
 
+    def get_history_list(self) -> list[QueryAttrs]:
+        return list(self._app_data.query_history)
+
     @property
     def db_file(self) -> Path:
         return self._db_file
