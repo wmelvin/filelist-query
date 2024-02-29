@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 from textual.app import ComposeResult
 from textual.containers import Horizontal
 from textual.screen import Screen
@@ -27,13 +25,19 @@ class HistoryScreen(Screen):
             list_view = self.query_one(ListView)
             ix = list_view.index
             qa = self._history_list[ix]
-            if not (qa.data_file and Path(qa.data_file).exists()):
-                md = self.query_one(Markdown)
-                md.update(
-                    f"Selected query data file is not available:\n \n{qa.data_file}\n"
-                )
-                md.add_class("warning")
-                return
+            self.app.set_current_query_from_history(qa)
+
+            # -- The query will be run against the current data file, so it
+            #    does not matter whether the original file exists.
+            #
+            # if not (qa.data_file and Path(qa.data_file).exists()):
+            #     md = self.query_one(Markdown)
+            #     md.update(
+            #         f"Selected query data file is not available:\n \n{qa.data_file}\n"
+            #     )
+            #     md.add_class("warning")
+            #     return
+
             # TODO: Have the app load the selected history item.
             self.app.pop_screen()
         elif event.button.id == "close-button":

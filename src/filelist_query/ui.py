@@ -145,8 +145,6 @@ class UI(App):
         qry.last_run_dt = self._app_data.current_query.last_run_dt or datetime.now(
             timezone.utc
         )
-        # TODO: Set when query is run.
-
         self._app_data.current_query = qry
 
     def save_app_data(self) -> None:
@@ -155,6 +153,14 @@ class UI(App):
 
     def get_history_list(self) -> list[QueryAttrs]:
         return list(self._app_data.query_history)
+
+    def set_current_query_from_history(self, query_attrs: QueryAttrs):
+        # Update the current query from a history item.
+        # The data_file attribute is set to the current data file.
+        # The last_run_dt attribute is cleared.
+        query_attrs.data_file = str(self.db_file)
+        query_attrs.last_run_dt = None
+        self._app_data.current_query = query_attrs
 
     @property
     def db_file(self) -> Path:

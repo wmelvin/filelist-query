@@ -30,9 +30,9 @@ class QueryAttrs:
 
     def as_dict(self) -> dict:
         """Return a dictionary representation that is serializable to JSON."""
-        d = self.__dict__
+        d = dict(self.__dict__)
         d["last_run_dt"] = self.last_run_dt.isoformat()
-        d["predicates"] = [p.__dict__ for p in self.predicates]
+        d["predicates"] = [dict(p.__dict__) for p in self.predicates]
         return d
 
     def from_dict(self, dict_from_json: dict) -> None:
@@ -63,6 +63,7 @@ class AppData:
             data_file = p / APP_DATA_FILE
             with data_file.open("w") as f:
                 json.dump(self.current_query.as_dict(), f, indent=4)
+
             if self.query_history:
                 history_file = p / APP_HISTORY_FILE
                 with history_file.open("w") as f:
@@ -74,18 +75,25 @@ class AppData:
             data_file = p / APP_DATA_FILE
             if data_file.exists():
                 with data_file.open("r") as f:
-                    d = json.load(f)
-                    self.current_query.from_dict(d)
+                    try:
+                        d = json.load(f)
+                        self.current_query.from_dict(d)
+                    except json.JSONDecodeError:
+                        pass  # TODO: Logging.
+
             history_file = p / APP_HISTORY_FILE
             if history_file.exists():
                 self.query_history = []
                 with history_file.open("r") as f:
-                    d = json.load(f)
-                    for q in d:
-                        qa = QueryAttrs()
-                        qa.from_dict(q)
-                        if qa is not None:
-                            self.query_history.append(qa)
+                    try:
+                        d = json.load(f)
+                        for q in d:
+                            qa = QueryAttrs()
+                            qa.from_dict(q)
+                            if qa is not None:
+                                self.query_history.append(qa)
+                    except json.JSONDecodeError:
+                        pass  # TODO: Logging.
 
     def add_to_history(self) -> None:
         # If an item with the same last_sql is in the history, remove it.
