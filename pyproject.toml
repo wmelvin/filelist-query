@@ -51,11 +51,13 @@ dependencies = [
   "pytest-asyncio",
   "pytest-textual-snapshot",
   "ruff",
-  # The filelist-tools package is used for testing. It is not available on PyPI, but the wheel is
-  # available on the author's website. New versions are not resolved automatically, so the URL
-  # must be updated manually.
+  # The 'filelist-tools' package is used for testing.
+  # It is still in development and is not on PyPI.
+  # A wheel file is available on the author's website. 
+  # The following URL must be updated manually for a new release.
   "filelist-tools@https://bogusoft.com/packages/filelist-tools/filelist_tools-2024.2.2.dev0-py3-none-any.whl",
 ]
+
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
 test-cov = "coverage run -m pytest {args:tests}"

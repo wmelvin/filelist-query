@@ -48,6 +48,6 @@ async def move_options(pilot):
     sc.set_focus(sel_lst)
 
 
-@pytest.mark.xfail(reason="not ready to capture snapshot")
+@pytest.mark.skip(reason="not ready to capture snapshot")
 def test_snap_move_options(snap_compare):
     assert snap_compare("../src/filelist_query/ui.py", run_before=move_options)

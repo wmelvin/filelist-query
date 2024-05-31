@@ -40,6 +40,6 @@ async def focus_criteria_tab(pilot):
     await pilot.press("down")
 
 
-@pytest.mark.xfail(reason="not ready to capture snapshot")
+@pytest.mark.skip(reason="not ready to capture snapshot")
 def test_snap_criteria_tab(snap_compare):
     assert snap_compare("../src/filelist_query/ui.py", run_before=focus_criteria_tab)

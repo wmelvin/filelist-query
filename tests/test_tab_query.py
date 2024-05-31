@@ -22,6 +22,6 @@ async def focus_query_tab(pilot):
     sc.set_focus(query_tab)
 
 
-@pytest.mark.xfail(reason="not ready to capture snapshot")
+@pytest.mark.skip(reason="not ready to capture snapshot")
 def test_snap_query_tab(snap_compare):
     assert snap_compare("../src/filelist_query/ui.py", run_before=focus_query_tab)
