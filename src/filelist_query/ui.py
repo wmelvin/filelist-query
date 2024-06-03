@@ -4,7 +4,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from textual.app import App, ComposeResult
-from textual.binding import Binding
 from textual.widgets import Footer, Header, Static, TabbedContent, TabPane
 
 from filelist_query.app_data import AppData, QueryAttrs
@@ -28,7 +27,7 @@ class FileTab(TabPane):
 
 class UI(App):
     BINDINGS = [
-        Binding("ctrl+x", "exit_app", "eXit", priority=True),
+        ("ctrl+q", "exit_app", "Quit"),
         ("d", "toggle_dark", "Toggle dark mode"),
         ("h", "load_history", "load History"),
     ]
