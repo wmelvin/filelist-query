@@ -1,6 +1,7 @@
 import pytest
-from filelist_query.ui import UI
 from textual.widgets import DataTable
+
+from filelist_query.ui import UI
 
 
 async def test_results_tab():

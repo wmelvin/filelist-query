@@ -1,6 +1,7 @@
 import pytest
-from filelist_query.ui import UI
 from textual.widgets import Select
+
+from filelist_query.ui import UI
 
 
 async def test_criteria_tab():

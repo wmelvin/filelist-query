@@ -15,7 +15,6 @@
 # Remove dist
 @clean:
   rm dist/*
-  rmdir dist
 
 # Apply formatting with ruff
 @format:

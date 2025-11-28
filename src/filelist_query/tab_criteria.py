@@ -30,8 +30,7 @@ class Predicate(Static):
         yield Button("-", id="remove-predicate")
 
     def update_column_options(self) -> None:
-        columns_tab = self.app.query_one("#columns-tab")
-        selected_columns = columns_tab.get_selected_columns()
+        selected_columns = self.app.query_one("#columns-tab").get_selected_columns()
         sel: Select = self.query_one("#select-column")
         sel.set_options((fld, fld) for fld in selected_columns)
 
@@ -41,21 +40,23 @@ class Predicate(Static):
     def sync_attrs(self):
         self.update_column_options()
         sel_cond = self.query_one("#select-condition")
+
         if self.pred_attrs.pred_type:
-            sel_pred = self.query_one("#select-pred")
-            sel_pred.value = self.pred_attrs.pred_type
+            self.query_one("#select-pred").value = self.pred_attrs.pred_type
+
         if self.pred_attrs.column:
-            sel_col = self.query_one("#select-column")
-            sel_col.value = self.pred_attrs.column
-            columns_tab = self.app.query_one("#columns-tab")
-            column_type = columns_tab.get_column_type(self.pred_attrs.column)
+            self.query_one("#select-column").value = self.pred_attrs.column
+            column_type = self.app.query_one("#columns-tab").get_column_type(
+                self.pred_attrs.column
+            )
             cond_opts = get_cond_select_list(column_type)
             sel_cond.set_options(cond_opts)
+
         if self.pred_attrs.condition:
             sel_cond.value = self.pred_attrs.condition
+
         if self.pred_attrs.criteria:
-            input_criteria = self.query_one("#criteria-input")
-            input_criteria.value = self.pred_attrs.criteria
+            self.query_one("#criteria-input").value = self.pred_attrs.criteria
 
     def on_mount(self) -> None:
         self.update_column_options()
@@ -132,7 +133,7 @@ class CriteriaTab(TabPane):
         for _ in range(1, len(pred_attrs)):
             self.add_predicate()
         predicates = self.query(Predicate)
-        for pred, pa in zip(predicates, pred_attrs):
+        for pred, pa in zip(predicates, pred_attrs, strict=True):
             pred.set_attrs(pa)
 
     def sync_predicates(self) -> None:

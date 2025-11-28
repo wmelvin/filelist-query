@@ -1,8 +1,9 @@
 from pathlib import Path
 
 import pytest
-from filelist_query.ui import UI
 from make_filelist import mkfilelist
+
+from filelist_query.ui import UI
 
 
 @pytest.fixture
