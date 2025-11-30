@@ -14,7 +14,7 @@
 
 # Remove dist
 @clean:
-  rm dist/*
+  -rm dist/*
 
 # Apply formatting with ruff
 @format:

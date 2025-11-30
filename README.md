@@ -4,6 +4,12 @@ Textual user interface for querying databases created by filelist-tools.
 
 > Development work in progress - *barely* usable as is.
 
+
+**UPDATE 2025-11-30:**
+Archiving this project. I lost interest in building it after I tried
+[Harlequin](https://harlequin.sh/) ([GitHub](https://github.com/tconbeer/harlequin)).
+
+
 ## Reference
 
 - [wmelvin/filelist-tools](https://github.com/wmelvin/filelist-tools)
